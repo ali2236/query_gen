@@ -41,9 +41,8 @@ String _readPropertyFromJsonCodePart(Property prop) {
     var convert = '';
     if (!typeMap.values.contains(listType.replaceAll('?', ''))) {
       convert = 'map((json) => $listType.fromJson(json)).';
-      value += '?.toList()';
     }
-    value += '?.${convert}toList()';
+    value = '$value?.${convert}toList().cast<$listType>()';
   }
   return '$name:$value,';
 }
