@@ -24,7 +24,7 @@ Code queryResponseBuilder(){
 
   String get body => response.body;
 
-  Map<String, dynamic> get json => jsonDecode(body);
+  Map<String, dynamic> get json => { 'body' : jsonDecode(body) };
 
   T get data => parser(json);
 }

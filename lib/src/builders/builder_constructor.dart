@@ -8,7 +8,8 @@ Constructor namedConstructorBuilder(
   return Constructor(
     (b) => b
       ..constant = true
-      ..optionalParameters.addAll(properties.map((e) => e.asConstructorParameter)),
+      ..optionalParameters
+          .addAll(properties.map((e) => e.asConstructorParameter)),
   );
 }
 
@@ -21,19 +22,28 @@ Constructor fromJsonFactoryBuilder(String name, Iterable<Property> properties) {
       ..requiredParameters.add(Parameter((b) => b
         ..name = 'json'
         ..type = Reference('Map<String, dynamic>')))
-      ..body = Code('$name(${properties.map(_readPropertyFromJsonCodePart).join()})'),
+      ..body = Code(
+          '$name(${properties.map(_readPropertyFromJsonCodePart).join()})'),
   );
 }
 
-String _readPropertyFromJsonCodePart(Property prop){
+String _readPropertyFromJsonCodePart(Property prop) {
   final name = prop.name;
   final type = prop.type.symbol;
   var value = 'json[\'$name\']';
-  if(prop.isRef){
+  if (prop.isRef) {
     value = '$type.fromJson($value)';
-  } else if(type == 'DateTime'){
+  } else if (type == 'DateTime') {
     value = 'DateTime.tryParse($value)';
-    if(!prop.nullable) value += '!';
+    if (!prop.nullable) value += '!';
+  } else if (type!.contains('List')) {
+    final listType = type.substring(type.indexOf('<') + 1, type.indexOf('>'));
+    var convert = '';
+    if (!typeMap.values.contains(listType.replaceAll('?', ''))) {
+      convert = 'map((json) => $listType.fromJson(json)).';
+      value += '?.toList()';
+    }
+    value += '?.${convert}toList()';
   }
   return '$name:$value,';
 }
