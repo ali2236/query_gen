@@ -4,12 +4,16 @@ import 'json_object.dart';
 
 class PathParameter extends Property {
 
-  PathParameter(JsonObject source)
+  final JsonObject _source;
+
+  PathParameter(this._source)
       : super(
-          source['name'] ?? 'body',
-          source['schema'],
-          nullableParameter: source['in'] == 'query',
+          _source['name'] ?? 'body',
+          _source['schema'],
+          nullableParameter: _source['in'] == 'query',
         );
 
-  bool get inQuery => source['in'] == 'query';
+  bool get inQuery {
+    return _source['in'] == 'query';
+  }
 }

@@ -78,25 +78,25 @@ class Path {
     );
   }
 
-  Method get clientEndpoint => Method((b) => b
-    ..name = normalizedRoute(false)
-    ..lambda = true
-    ..type = MethodType.getter
-    ..returns = Reference('Endpoint<$requestClassName,$responseClassName>')
-    ..body = Code('''
+  Method get clientEndpoint {
+    final queryPrams = requestParams
+        ?.where((e) => e.inQuery)
+        .map((p) => fieldToJsonPart(p, ref: 'args.'));
+    return Method((b) => b
+      ..name = normalizedRoute(false)
+      ..lambda = true
+      ..type = MethodType.getter
+      ..returns = Reference('Endpoint<$requestClassName,$responseClassName>')
+      ..body = Code('''
     endpoint<
     $requestClassName,
     $responseClassName>(
       method: \'${method.toUpperCase()}\',
-      uriBuilder: (args) {
-        final query = <String, dynamic>{
-        ${requestParams?.map((p) => fieldToJsonPart(p, ref: 'args.')).join() ?? ''}
-        };
-        final uri = Uri.parse(\'${route.replaceAll('{', '\${args.')}\').replace(queryParameters: query);
-        return uri;
-      },
+      uriBuilder: (args) => Uri.parse(\'\$baseUrl${route.replaceAll('{', '\${args.')}\')
+        ${queryPrams != null && queryPrams.isNotEmpty ? '.replace(queryParameters: {${queryPrams.join()}})' : ''},
       adapter: (json) => $responseClassName.fromJson(json),
     )'''));
+  }
 
   Class get responseClass {
     var param = responseParams;
@@ -105,8 +105,6 @@ class Path {
       properties: param == null ? [] : [param],
     );
   }
-
-
 }
 
 extension StringExtension on String {
