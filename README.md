@@ -44,3 +44,9 @@ class ApiClient extends BaseClient with QueryClient {
 ```
 
 You can customize `send` to add `caching`/`retrying`/`authentication`.
+
+### Parameters
+
+- `partOf <dart file>`: The Dart file Uri to be part of
+- `fromUrl <url>`: Downloads the OpenApi spec from this url
+- `fromFile <path>`: Reads the OpenApi spec from this url 
