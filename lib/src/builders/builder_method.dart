@@ -12,17 +12,24 @@ Method toJsonBuilder(Iterable<Property> properties) {
         '{${properties.map(fieldToJsonPart).join()}}'));
 }
 
-String fieldToJsonPart(Property prop,{String ref = ''}) {
+String fieldToJsonPart(Property prop,{String ref = '', bool stringEntry = false}) {
   final name = prop.name;
   var value = name;
   var prefix = '';
+  var postfix = '';
   if(prop.isRef){
-    value = '$value.toJson()';
+    if(stringEntry){
+       postfix = '.map((e) => e.toString()).toList()';
+    } else {
+      postfix = '.toJson()';
+    }
   } else if (prop.type.symbol == 'DateTime') {
-    value = '$value.toIso8601String()';
+    postfix = '.toIso8601String()';
+  } else if(stringEntry){
+    postfix = '.toString()';
   }
   if(prop.nullable) prefix = 'if($ref$name != null)';
-  return '$prefix\'$name\': $ref$value,';
+  return '$prefix\'$name\': $ref$value$postfix,';
 }
 
 Method apiEndpointBuilder() {

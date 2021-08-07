@@ -81,7 +81,7 @@ class Path {
   Method get clientEndpoint {
     final queryPrams = requestParams
         ?.where((e) => e.inQuery)
-        .map((p) => fieldToJsonPart(p, ref: 'args.'));
+        .map((p) => fieldToJsonPart(p, ref: 'args.', stringEntry: true));
     return Method((b) => b
       ..name = normalizedRoute(false)
       ..lambda = true
