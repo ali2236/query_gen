@@ -1,6 +1,6 @@
 name: query_gen
 description: A CLI tool for generating models and HTTP client for Dart based on OpenApi Specs(json)
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/ali2236/query_gen
 # homepage: https://www.example.com
 
