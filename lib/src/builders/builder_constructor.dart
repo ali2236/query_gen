@@ -31,7 +31,11 @@ String _readPropertyFromJsonCodePart(Property prop) {
   final type = prop.type.symbol;
   var value = 'json[\'$name\']';
   if (prop.isRef) {
-    value = '$type.fromJson($value)';
+    if(!prop.nullable){
+      value = '$type.fromJson($value)';
+    } else {
+      value = '$value != null ? $type.fromJson($value) : null';
+    }
   } else if (type == 'DateTime') {
     value = 'DateTime.tryParse($value)';
     if (!prop.nullable) value += '!';
