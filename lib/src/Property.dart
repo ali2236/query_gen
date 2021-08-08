@@ -55,7 +55,7 @@ class Property {
 
   Reference _fromRef(String ref) {
     final i = ref.lastIndexOf('/');
-    final name = ref.substring(i + 1);
+    var name = ref.substring(i + 1);
     return Reference(name);
   }
 
@@ -72,6 +72,14 @@ class Property {
 
   Field get asField => Field((b) => b
     ..name = name
-    ..type = type
+    ..type = nullCheckedType
     ..modifier = FieldModifier.final$);
+
+  Reference get nullCheckedType {
+    var symbol = type.symbol!;
+    if(!symbol.endsWith('?') && nullable){
+      return Reference('$symbol?');
+    }
+    return Reference(symbol);
+  }
 }

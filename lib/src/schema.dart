@@ -12,8 +12,11 @@ class Schema {
 
   JsonObject get _properties => source['properties'];
 
+  Iterable<String>? get required => source['required']?.cast<String>();
+
   Iterable<Property>? get properties {
-    return _properties.entries.map((e) => Property(e.key, e.value));
+    var req = required?.toSet() ?? <String>{};
+    return _properties.entries.map((e) => Property(e.key, e.value, nullableParameter: !req.contains(e.key)));
   }
 
   Class get asClass => serializableClassBuilder(name: name, properties: properties!);
