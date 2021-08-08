@@ -21,6 +21,9 @@ String fieldToJsonPart(Property prop,{String ref = '', bool stringEntry = false}
        postfix = '.map((e) => e.toString()).toList()';
     } else {
       postfix = '.toJson()';
+      if(prop.nullable){
+        postfix = '?$postfix';
+      }
     }
   } else if (prop.type.symbol == 'DateTime') {
     postfix = '.toIso8601String()';
