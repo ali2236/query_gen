@@ -5,11 +5,10 @@ import '../Property.dart';
 Method toJsonBuilder(Iterable<Property> properties) {
   return Method((b) => b
     ..name = 'toJson'
-    ..lambda = true
     ..annotations.add(CodeExpression(Code('override')))
     ..returns = Reference('Map<String, dynamic>')
     ..body = Code(
-        '{${properties.map(fieldToJsonPart).join()}}'));
+        'return {${properties.map(fieldToJsonPart).join()}};'));
 }
 
 String fieldToJsonPart(Property prop,{String ref = '', bool stringEntry = false}) {

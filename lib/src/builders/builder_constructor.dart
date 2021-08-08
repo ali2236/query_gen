@@ -18,12 +18,11 @@ Constructor fromJsonFactoryBuilder(String name, Iterable<Property> properties) {
     (b) => b
       ..name = 'fromJson'
       ..factory = true
-      ..lambda = true
       ..requiredParameters.add(Parameter((b) => b
         ..name = 'json'
         ..type = Reference('Map<String, dynamic>')))
       ..body = Code(
-          '$name(${properties.map(_readPropertyFromJsonCodePart).join()})'),
+          'return $name(${properties.map(_readPropertyFromJsonCodePart).join()});'),
   );
 }
 
