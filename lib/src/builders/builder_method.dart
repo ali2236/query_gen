@@ -7,30 +7,43 @@ Method toJsonBuilder(Iterable<Property> properties) {
     ..name = 'toJson'
     ..annotations.add(CodeExpression(Code('override')))
     ..returns = Reference('Map<String, dynamic>')
-    ..body = Code(
-        'return {${properties.map(fieldToJsonPart).join()}};'));
+    ..body = Code('return {${properties.map(fieldToJsonPart).join()}};'));
 }
 
-String fieldToJsonPart(Property prop,{String ref = '', bool stringEntry = false}) {
+String fieldToJsonPart(Property prop,
+    {String ref = '', bool stringEntry = false}) {
   final name = prop.name;
   var value = name;
   var prefix = '';
   var postfix = '';
-  if(prop.isRef){
-    if(stringEntry){
-       postfix = '.map((e) => e.toString()).toList()';
+  if (prop.isRef) {
+    if (stringEntry) {
+      postfix = '.map((e) => e.toString()).toList()';
     } else {
       postfix = '.toJson()';
-      if(prop.nullable){
+      if (prop.nullable) {
         postfix = '?$postfix';
       }
     }
   } else if (prop.type.symbol == 'DateTime') {
     postfix = '.toIso8601String()';
-  } else if(stringEntry){
+  } else if (stringEntry) {
     postfix = '.toString()';
+  } else if (prop.type.symbol!.startsWith('List')) {
+    final listType = prop.type.symbol!.substring(
+      prop.type.symbol!.indexOf('<') + 1,
+      prop.type.symbol!.indexOf('>'),
+    );
+    if(listType == 'String' || listType == 'bool' || listType == 'int'){
+      // do nothing
+    } else {
+      postfix = '.map((e) => e.toJson()).toList()';
+      if (prop.nullable) {
+        postfix = '?$postfix';
+      }
+    }
   }
-  if(prop.nullable) prefix = 'if($ref$name != null)';
+  if (prop.nullable) prefix = 'if($ref$name != null)';
   return '$prefix\'$name\': $ref$value$postfix,';
 }
 
