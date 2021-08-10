@@ -10,8 +10,11 @@ Method toJsonBuilder(Iterable<Property> properties) {
     ..body = Code('return {${properties.map(fieldToJsonPart).join()}};'));
 }
 
-String fieldToJsonPart(Property prop,
-    {String ref = '', bool stringEntry = false}) {
+String fieldToJsonPart(
+  Property prop, {
+  String ref = '',
+  bool stringEntry = false,
+}) {
   final name = prop.name;
   var value = name;
   var prefix = '';
@@ -34,7 +37,16 @@ String fieldToJsonPart(Property prop,
       prop.type.symbol!.indexOf('<') + 1,
       prop.type.symbol!.indexOf('>'),
     );
-    if(listType == 'String' || listType == 'bool' || listType == 'int'){
+    if (const {
+      'String',
+      'String?',
+      'int',
+      'int?',
+      'bool',
+      'bool?',
+      'double',
+      'double?',
+    }.contains(listType)) {
       // do nothing
     } else {
       postfix = '.map((e) => e.toJson()).toList()';

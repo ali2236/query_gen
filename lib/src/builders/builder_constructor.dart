@@ -34,7 +34,7 @@ String _readPropertyFromJsonCodePart(Property prop) {
     if(!prop.nullable){
       value = '$type.fromJson($value)';
     } else {
-      value = '$value != null ? $type.fromJson($value) : null';
+      value = 'json.containsKey(\'$name\') ? $type.fromJson($value) : null';
     }
   } else if (type == 'DateTime') {
     value = 'DateTime.tryParse($value)';
