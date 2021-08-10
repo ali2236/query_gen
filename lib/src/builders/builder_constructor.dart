@@ -20,7 +20,7 @@ Constructor fromJsonFactoryBuilder(String name, Iterable<Property> properties) {
       ..factory = true
       ..requiredParameters.add(Parameter((b) => b
         ..name = 'json'
-        ..type = Reference('Map<String, dynamic>')))
+        ..type = Reference('Map')))
       ..body = Code(
           'return $name(${properties.map(_readPropertyFromJsonCodePart).join()});'),
   );
