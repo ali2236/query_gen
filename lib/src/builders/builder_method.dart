@@ -78,7 +78,7 @@ Method apiEndpointBuilder() {
       ..body = Code('''
       return (Req args) async {
       final req = Request(method, uriBuilder(args));
-      if (method == 'POST') req.body = jsonEncode(args.toJson());
+      if (method == 'POST' || method == 'PUT' || method == 'PATCH' || method == 'DELETE') req.body = jsonEncode(args.toJson());
       var streamedResponse = await send(req);
       var response = await Response.fromStream(streamedResponse);
       return QueryResponse(response, adapter);
