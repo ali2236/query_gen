@@ -90,7 +90,15 @@ Method apiEndpointBuilder() {
       ..body = Code('''
       return (Req args) async {
       final req = Request(method, uriBuilder(args));
-      if (method == 'POST' || method == 'PUT' || method == 'PATCH' || method == 'DELETE') req.body = args.toJson();
+      if (method == 'POST' ||
+          method == 'PUT' ||
+          method == 'PATCH' ||
+          method == 'DELETE') {
+        req.body = jsonEncode(args.toJson());
+        req.headers.addAll({
+            "content-type": "application/json"
+        });
+      }
       var streamedResponse = await send(req);
       var response = await Response.fromStream(streamedResponse);
       return QueryResponse(response, adapter);
