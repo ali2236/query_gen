@@ -8,7 +8,6 @@ Class serializableClassBuilder({
   required String name,
   required Iterable<Property> properties,
 }) {
-  //if (properties.isEmpty) return emptySerializableClassBuilder(name: name);
   return Class(
     (b) => b
       ..name = name
